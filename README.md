@@ -1,4 +1,4 @@
-# c2c-64
+# C2C-64
 A Composite/SVideo to Component Video converter
 
 ## Description
@@ -11,7 +11,7 @@ C2C-64 uses a simple pipeline of video decoder and encoder to transform the inpu
 
 ## Comparison to Koryuu
 
-In terms of functionality, C2C-64 provides a similar experience to the commercial product (Koryuu)[https://videogameperfection.com/products/koryuu-transcoder/]. However, there are notable differences between C2C-64 and Koryuu:
+In terms of functionality, C2C-64 provides a similar experience to the commercial product [Koryuu](https://videogameperfection.com/products/koryuu-transcoder/). However, there are notable differences between C2C-64 and Koryuu:
 - C2C-64 is fully Open and Free, both Software and Hardware. Note, C2C-64 is still WiP so some parts are either missing or still in beta.
 - C2C-64 has been designed to be as affordable as possible. The PCB is a 50x50mm 4 layer design, for which you can normally get special deals on PCB manufacturers. With the current shortage of electronica parts, it is difficult to estimate the total BOM cost given the huge price fluctuations. It should be possible to get the board built for under $50 in small amounts even in these adverse conditions.
 - The video decoding IC in C2C-64 is the older Adv7180, compared to the more modern Adv7280 of the Koryuu. I made extensive tests, and for the intent and purposes of this board I don't think the extra cost of Adv7280 (5x the price of Adc7180) is justified. 
