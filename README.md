@@ -9,7 +9,7 @@ This is an open hardware implementation of a board to convert Composite and S-Vi
 
 C2C-64 was primarily design as a simple way to connect a C64 to and OSSC. Most of the testing has been done in this platform, and presets have been chosen with it in mind. I have conducted some tests with other machines (N64, SNES, Dreamcast), although not as extensive.
 
-C2C-64 uses a simple pipeline of video decoder and encoder to transform the input composite or S-video signals into component video. What this means in practice is that the analog input is converted to digital format and fed to the encoder to transform it into a different analog signal. This conversion is NOT lossless, but it enables anyone to directly hook such signals into the OSSC without tinkering with the internals of your devices. 
+C2C-64 uses a simple pipeline of video decoder and encoder to transform the input composite or S-video signals into component video. What this means in practice is that the analog input is converted to digital format and fed to the encoder to transform it into a different analog signal. This conversion is NOT lossless. However, it enables anyone to conveniently hook such signals directly into the OSSC without tinkering with the internals of their devices. 
 
 <img alt="C2C-64 Case Image" src="images/case.png" width="600">
 
@@ -17,7 +17,7 @@ C2C-64 uses a simple pipeline of video decoder and encoder to transform the inpu
 
 In terms of functionality, C2C-64 provides a similar experience to the commercial product [Koryuu](https://videogameperfection.com/products/koryuu-transcoder/). However, there are notable differences between C2C-64 and Koryuu:
 - C2C-64 is fully Open and Free, both Software and Hardware. Note, C2C-64 is still WiP so some parts are either missing or still in beta.
-- C2C-64 has been designed to be as affordable as possible. The PCB is a 50x50mm 4 layer design, for which you can normally get special deals on PCB manufacturers. With the current shortage of electronica parts, it is difficult to estimate the total BOM cost given the huge price fluctuations. It should be possible to get the board built for under $50 in small amounts even in these adverse conditions.
+- C2C-64 has been designed to be as affordable as possible. The PCB is a 50x50mm 4 layer design, for which you can normally get special deals on PCB manufacturers. With the current shortage of electronic parts, it is difficult to estimate the total BOM cost given the huge price fluctuations. It should be possible to get the board built for well under $50 in small amounts even in these adverse conditions (half the price of Koryuu).
 - The video decoding IC in C2C-64 is the older Adv7180, compared to the more modern Adv7280 of the Koryuu. I made extensive tests, and for the intent and purposes of this board I don't think the extra cost of Adv7280 (5x the price of Adc7180) is justified. 
 - C2C-64 adds a big number of usability features to the mix (described below) making it way more flexible in terms of configuration options
 
