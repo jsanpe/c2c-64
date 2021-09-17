@@ -1,7 +1,7 @@
 # C2C-64
 A Composite/SVideo to Component Video converter
 
-<img alt="C2C-64 Board Image" src="images/board.jpg" width="500">
+<img alt="C2C-64 Board Image" src="images/board.jpg" width="600">
 
 ## Description
 
@@ -10,6 +10,8 @@ This is an open hardware implementation of a board to convert Composite and S-Vi
 C2C-64 was primarily design as a simple way to connect a C64 to and OSSC. Most of the testing has been done in this platform, and presets have been chosen with it in mind. I have conducted some tests with other machines (N64, SNES, Dreamcast), although not as extensive.
 
 C2C-64 uses a simple pipeline of video decoder and encoder to transform the input composite or S-video signals into component video. What this means in practice is that the analog input is converted to digital format and fed to the encoder to transform it into a different analog signal. This conversion is NOT lossless, but it enables anyone to directly hook such signals into the OSSC without tinkering with the internals of your devices. 
+
+<img alt="C2C-64 Case Image" src="images/case.png" width="600">
 
 ## Comparison to Koryuu
 
