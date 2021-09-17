@@ -1,6 +1,6 @@
 # C2C-64
 A Composite/SVideo to Component Video converter
-[!C2C-64 Board Image](images/board.jpg)
+![C2C-64 Board Image](images/board.jpg)
 ## Description
 
 This is an open hardware implementation of a board to convert Composite and S-Video signals into Component video. The component output from C2C-64 can be directly connected to an OSSC, effectively adding compatibility with Composite and S-Video input to this great scaler.
