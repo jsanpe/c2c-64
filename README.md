@@ -1,5 +1,7 @@
 # C2C-64
-A Composite/SVideo to Component Video converter
+A Composite & S-Video to Component Video transcoder to feed older analog signals into your OSSC.
+
+Designed with the C-64 in mind, it also supports composite and s-video signals from other systems, including the N64. A compatibility chart will soon be available in the wiki section of this project.
 
 <img alt="C2C-64 Board Image" src="images/board.jpg" width="600">
 
