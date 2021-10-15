@@ -5,6 +5,7 @@
 #include "mcurses.h"
 #include "log.h"
 #include "config.h"
+#include "menus.h"
 
 #if (DECODER==ADV7280)
 #include "decoder_7280Q32.h"
@@ -14,11 +15,16 @@ Decoder *decoder = new Decoder_7280Q32();
 Decoder *decoder = new Decoder_7180Q32();
 #endif
 
+bool has_oled = false;
 void init_oled() {
   #ifdef OLED_ENABLED
-    oled.begin(&Adafruit128x64, OLED_ADDR);
-    oled.setFont(Adafruit5x7);
-    oled.clear();
+    SSD1306AsciiWire *oled = getOled();
+    has_oled=true;
+    oled->begin(&Adafruit128x64, OLED_ADDR);
+    oled->displayRemap(true);
+    oled->setFont(Adafruit5x7);
+    oled->clear();
+    info("Oled screen found!");
   #endif
 }
 
@@ -45,7 +51,10 @@ MainStatus mainStatus;
 bool userInputFlag = false;
 static int i2c_error_count = 0;
 static int param_index = 0;
+static bool in_menu = false;
+static bool in_option = false;
 static ConfigManager config = ConfigManager(decoder);
+
 
 void Arduino_putchar(uint8_t c)
 {
@@ -63,7 +72,7 @@ void init_pins() {
   pinMode(LED_LOCK , OUTPUT);
   pinMode(LED_SIGNAL , OUTPUT);
   pinMode(RESET_ADV , OUTPUT);
-  pinMode(INPUT_SELECT , INPUT);
+  pinMode(BTN_INPUT , INPUT);
   pinMode(BTN_MINUS, INPUT);
   pinMode(BTN_PLUS, INPUT);
 }
@@ -95,41 +104,48 @@ void init_output() {
 byte init_adv() {
   //Init Decoder
   byte err_dec = decoder->reset();
-  _log("RD:"); _logln(err_dec);
+  //_log("RD:"); _logln(err_dec);
   digitalWrite(LED_INPUT, err_dec==0?1:0);
   //Init Encoder
   byte err_enc = reset_encoder();
-  _log("RE:"); _logln(err_enc);
+  //_log("RE:"); _logln(err_enc);
   digitalWrite(LED_LOCK, err_enc==0?1:0);
   digitalWrite(LED_SIGNAL, 1);
   return err_dec+err_enc;
 }
 
 static byte err_init_adv = 0;
+void print_status();
 
 void change_input() {
   digitalWrite(LED_INPUT, mainStatus.input==CVBS?1:0);
+  print_status();
   init_decoder(mainStatus.decoderFreeRun, mainStatus.input==CVBS);
 }
 
 void setup() {
   init_pins(); //setup GPIO
-  hello_signal(); //blink leds with known pattern
+
   init_output(); //Init UART and I2C
+  logo();
+
+  hello_signal(); //blink leds with known pattern
   reset_adv(); //Reset Video decoder and encoder
   
   Serial.println("C2C-Initializing");
   err_init_adv = init_adv();
-  delay(500);
+  delay(1500);
   if(err_init_adv==0) {
     digitalWrite(LED_SIGNAL,1);
     delay(500);
+    getOled()->clear();
     clear_leds();
     mainStatus.input = SVIDEO;
     mainStatus.decoderFreeRun = 0;
     change_input();
     delay(100);
     initscr();
+    getOled()->clear();
   }
 }
 
@@ -150,7 +166,11 @@ void print_parameter(Parameter *p, bool main=false) {
   addch(main?'>':' ');addch(' ');addstr(p->name());
   move(starty, 30); print_byte(config.get_param_value(p));
 }
+
+void print_parameter_oled(Parameter *p, byte row, bool main=false, bool exit=false);
+
 void print_status() {
+
   clear();
   //_log_clear();
   move(0,0);
@@ -187,11 +207,48 @@ void print_status() {
   move(15,0);
   refresh();
 
+  //Oled
+  if(in_menu) {
+    status_top(mainStatus.input==CVBS, lastDecoderStatus.lock, lastDecoderStatus.interlaced, 
+      lastDecoderStatus.isNTSC(), lastDecoderStatus.isPAL(), lastDecoderStatus.isSECAM(),
+      lastDecoderStatus.hzs==60);
+
+    Parameter *p = decoder->getParams()+param_index;
+    //if(param_index>1) print_parameter_oled(p-2, 2, false, false);
+    if(param_index>0) print_parameter_oled(p-1, 2, false, false);
+    print_parameter_oled(p, 3, true, p->level()==PARAM_TERMINATOR);
+    if(p->level()!=PARAM_TERMINATOR) {
+      if((p+1)->level()!= PARAM_TERMINATOR) {
+        print_parameter_oled(p+1, 4, true, p->level()==PARAM_TERMINATOR);
+        if((p+2)->level()!= PARAM_TERMINATOR) {
+          print_parameter_oled(p+2, 5, true, p->level()==PARAM_TERMINATOR);
+        }
+      }
+    }
+
+  } else {
+    getOled()->clear();
+    status_mid(mainStatus.input==CVBS, lastDecoderStatus.lock, lastDecoderStatus.interlaced, 
+      lastDecoderStatus.isNTSC(), lastDecoderStatus.isPAL(), lastDecoderStatus.isSECAM(),
+      lastDecoderStatus.hzs==60, 0);
+  }
+
+}
+
+void print_parameter_oled(Parameter *p, byte row, bool main=false, bool exit=false) {
+  //getOled()->clearRow(row);
+  getOled()->print(main?F("> "):F("  "));
+  if(exit) getOled()->print(F("Exit menu"));
+  else getOled()->print(p->name());
+  //move(starty, 30); print_byte(config.get_param_value(p));
 }
 
 void loop() {
   static int last_input = 0;
-  if(err_init_adv!=0){Serial.println("Will not loop b/c init error");delay(1000);return;}
+  static int counter_health=0;
+
+  counter_health++;
+  if(err_init_adv!=0){Serial.println(F("Will not loop b/c init error"));delay(1000);return;}
 
   DecoderStatus status = decoder->get_status();
   if(status.i2c_error!=0) {
@@ -213,22 +270,59 @@ void loop() {
     userInputFlag = false;
     print_status();
   }
-
-  int input_select = digitalRead(INPUT_SELECT);
-  if(last_input>0 && input_select == 0) {
-      last_input = 0;
-      mainStatus.input = mainStatus.input==SVIDEO?CVBS:SVIDEO;
-      change_input();
-      return;
+  if(counter_health>20) {
+    counter_health=0;
+    status_health();
   }
-  last_input = input_select;
+
   
+  int minus = digitalRead(BTN_MINUS);
+  int plus = digitalRead(BTN_MINUS);
+  if(in_menu){
+    if(in_option){
+      if(minus){
+        userInputFlag = true;
+        Parameter *p = decoder->getParams()+param_index;
+        config.dec(p);
+      } else if (plus) {
+        userInputFlag = true;
+        Parameter *p = decoder->getParams()+param_index;
+        config.inc(p);
+      }
+    } else {
+      if(minus){
+        userInputFlag = true;
+        if(param_index>0) param_index--;
+      } else if (plus) {
+        userInputFlag = true;
+        if(decoder->getParams()[param_index].level()!=PARAM_TERMINATOR) param_index++;
+      }
+    }
+
+
+  } else {
+    int input_select = digitalRead(BTN_INPUT);
+    if(last_input>0 && input_select == 0) {
+        last_input = 0;
+        mainStatus.input = mainStatus.input==SVIDEO?CVBS:SVIDEO;
+        change_input();
+        return;
+    } else {
+      last_input = input_select;
+    }
+
+    if(minus==plus && plus==1) {
+      in_menu=true;
+      return;
+    }
+  }
+
   delay(50);
 
   while(Serial.available()>0) {
     int userInput = Serial.read();
     char userInputChar = (char)userInput;
-    _log(userInputChar);
+
     if(userInput>=(byte)'1' && userInput<=(byte)'3') {
       userInputFlag = true;
       byte userInputOption = userInput - (byte)'0';
