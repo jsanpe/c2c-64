@@ -3,13 +3,14 @@ A Composite & S-Video to Component Video transcoder to feed older analog signals
 
 Designed with the C-64 in mind, it also supports composite and s-video signals from other systems, including the N64. A compatibility chart will soon be available in the wiki section of this project.
 
-<img alt="C2C-64 Board Image" src="images/board.jpg" width="600">
+<p float="left">
+    <img alt="C2C-64 Board Image" src="images/board.jpg" width="470">
+    <img alt="C2C-64 Case Image" src="images/c2c-64-1r3.jpg" width="470">
+</p> 
 
 ## Description
 
 This is an open hardware implementation of a board to convert Composite and S-Video signals into Component video. The component output from C2C-64 can be directly connected to an OSSC, effectively adding compatibility with Composite and S-Video input to this great scaler.
-
-<img alt="C2C-64 Case Image" src="images/c2c-64-1r3.jpg" width="600">
 
 C2C-64 was primarily design as a simple way to connect a C64 to and OSSC. Most of the testing has been done in this platform, and presets have been chosen with it in mind. I have conducted some tests with other machines (N64, SNES, Dreamcast), although not as extensive.
 
@@ -23,8 +24,9 @@ It is important to note that building this requires ninja-grade soldering skills
 
 I am in the process of building a first batch of 35 boards (version 1R3) that I will be selling to anyone interested in supporting the project. Reach me directly if you are interested (DM me directly through [twitter](https://twitter.com/jsanpe))
 
-You can also support the project by donating through my KoFi page
-<script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#29abe0', 'F2F76LISE');kofiwidget2.draw();</script> 
+You can also support the project by donating through my KoFi page 
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F2F76LISE)
 
 ## Comparison to Koryuu
 
