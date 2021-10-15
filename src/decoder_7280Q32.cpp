@@ -142,6 +142,7 @@ DecoderStatus Decoder_7280Q32::get_status() {
     status.lock = status_bytes[0] & 0x1;
     status.standard = (status_bytes[0] & 0x70) >> 4;
     status.interlaced = (status_bytes[3] & 0x40) >> 6;
+    status.hzs = ((status_bytes[3] & 0x04) >> 2)==0?60:50;
     for(int i=0;i<4;i++) status.raw[i] = status_bytes[i];
   }
 
