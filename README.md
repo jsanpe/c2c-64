@@ -9,13 +9,13 @@ Designed with the C-64 in mind, it also supports composite and s-video signals f
 
 This is an open hardware implementation of a board to convert Composite and S-Video signals into Component video. The component output from C2C-64 can be directly connected to an OSSC, effectively adding compatibility with Composite and S-Video input to this great scaler.
 
-<img alt="C2C-64 Case Image" src="images/c2c-64-1R3.png" width="600">
+<img alt="C2C-64 Case Image" src="images/c2c-64-1r3.jpg" width="600">
 
 C2C-64 was primarily design as a simple way to connect a C64 to and OSSC. Most of the testing has been done in this platform, and presets have been chosen with it in mind. I have conducted some tests with other machines (N64, SNES, Dreamcast), although not as extensive.
 
 C2C-64 uses a simple pipeline of video decoder and encoder to transform the input composite or S-video signals into component video. What this means in practice is that the analog input is converted to digital format and fed to the encoder to transform it into a different analog signal. This conversion is NOT lossless. However, it enables anyone to conveniently hook such signals directly into the OSSC without tinkering with the internals of their devices. 
 
-<img alt="C2C-64 Case Image" src="images/c2c-64-case.png" width="600">
+<img alt="C2C-64 Case Image" src="images/c2c-64-case.jpg" width="600">
 
 ## Comparison to Koryuu
 
