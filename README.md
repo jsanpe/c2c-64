@@ -16,6 +16,8 @@ C2C-64 was primarily design as a simple way to connect a C64 to and OSSC. Most o
 
 C2C-64 uses a simple pipeline of video decoder and encoder to transform the input composite or S-video signals into component video. What this means in practice is that the analog input is converted to digital format and fed to the encoder to transform it into a different analog signal. This conversion is NOT lossless. However, it enables anyone to conveniently hook such signals directly into the OSSC without tinkering with the internals of their devices. 
 
+<img alt="C2C-64 Case Image" src="images/c2c-64-case.jpg" width="450">
+
 ## Getting your C2C-64
 
 This is an open project, in this repository you will find everything you need in order to build your own C2C-64.
@@ -43,7 +45,7 @@ One important improvement of C2C-64 over Koryuu is the inclusion of powerful int
 - UART connection: A computer can be hooked up to the board using the uart pin headers available for this purpose. Using a VT100 compatible terminal, users can configure tenths of parameters about how the video decoding/encoding is performed using menus. Such settings can then be stored as profiles in the EEPROM to be easily accessed using the side switches.
 - OLED Screen: The board supports the connection of an OPTIONAL 0.96'' oled display. When the board detected that an OLED display has been connected, it will show a reduced version of the menu system offered through the UART connection, making the use of a computer to configure settings completely unnecessary.
 
-<img alt="C2C-64 Case Image" src="images/c2c-64-case.jpg" width="600">
+<img alt="C2C-64 Case Image" src="images/c2c-64-oled.jpg" width="600">
 
 There are also 4 leds that are used to show important signals about the operation of the board
 
