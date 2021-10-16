@@ -280,20 +280,20 @@ void loop() {
   int plus = digitalRead(BTN_MINUS);
   if(in_menu){
     if(in_option){
-      if(minus){
+      if(minus==0){
         userInputFlag = true;
         Parameter *p = decoder->getParams()+param_index;
         config.dec(p);
-      } else if (plus) {
+      } else if (plus==0) {
         userInputFlag = true;
         Parameter *p = decoder->getParams()+param_index;
         config.inc(p);
       }
     } else {
-      if(minus){
+      if(minus==0){
         userInputFlag = true;
         if(param_index>0) param_index--;
-      } else if (plus) {
+      } else if (plus==0) {
         userInputFlag = true;
         if(decoder->getParams()[param_index].level()!=PARAM_TERMINATOR) param_index++;
       }
@@ -311,7 +311,7 @@ void loop() {
       last_input = input_select;
     }
 
-    if(minus==plus && plus==1) {
+    if(minus==plus && plus==0) {
       in_menu=true;
       return;
     }
