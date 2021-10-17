@@ -24,7 +24,7 @@ This is an open project, in this repository you will find everything you need in
 
 It is important to note that building this requires ninja-grade soldering skills, especially to get those QFN ICs properly connected to the board. Also, sourcing some of the components may be a bit trickier than usual. In particular, the ADV7180 IC is unsupported by Analog anymore and probably AliExpress is the only place where it can be found at this point. There is an ADV7280(A) based version of the C2C (2R) that will be soon released, but the price of this IC is way more expensive.
 
-I am in the process of building a first batch of 35 boards (version 1R3) that I will be selling to anyone interested in supporting the project. Reach me directly if you are interested (DM me directly through [twitter](https://twitter.com/jsanpe))
+I am in the process of building a first batch of 35 boards (version 1R3) that I will be selling to anyone interested in supporting the project. Reach me directly if you are interested at `com2com64@gmail.com`. I will be compiling a list and start shipping them on a first come first served basis.
 
 You can also support the project by donating through my KoFi page 
 
