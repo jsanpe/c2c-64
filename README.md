@@ -4,8 +4,8 @@ A Composite & S-Video to Component Video transcoder to feed older analog signals
 Designed with the C-64 in mind, it also supports composite and s-video signals from other systems, including the N64. A compatibility chart will soon be available in the wiki section of this project.
 
 <p float="left">
-    <img alt="C2C-64 Board Image" src="images/board.jpg" height="300">
-    <img alt="C2C-64 Case Image" src="images/c2c-64-1r3.jpg" height="300">
+    <img alt="C2C-64 Board Image" src="images/board.jpg" height="270">
+    <img alt="C2C-64 Case Image" src="images/c2c-64-1r3.jpg" height="270">
 </p> 
 
 ## Description
