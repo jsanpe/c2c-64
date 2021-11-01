@@ -1,4 +1,5 @@
 #include "encoder.h"
+#include "config.h"
 
 byte reset_encoder() {
   byte ret = 0;
@@ -23,6 +24,10 @@ byte init_encoder(int test=0, byte interlaced_flag=0) {
     //encode input coming from the 
     ret += send_i2c(ENCODER_ADDR, 0x00, 0x1E); //Dacs ON, PLL ON //0x1E -> PLL OFF
     ret += send_i2c(ENCODER_ADDR, 0x01, 0x00); // SD input mode
+    #ifdef OUTPUT_RGB
+    ret += send_i2c(ENCODER_ADDR, 0x02, 0x10); // SD input mode
+    #endif
+
     //ret += send_i2c(ENCODER_ADDR, 0x10, 0x10); //Enable DAC autopower-down (based on cable detection
     //PAL standard. SSAF luma filter enabled. 1.3 MHz chroma filter enabled.
     ret += send_i2c(ENCODER_ADDR, 0x80, 0x11); //PAL
