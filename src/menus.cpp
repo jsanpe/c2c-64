@@ -54,13 +54,14 @@ void status_mid(bool cvbs, bool locked, bool interlaced, bool ntsc, bool pal, bo
     if(locked){
         oled->set2X();
         oled->clearField(MID_STATUS_INPUT_LEN*fontW, 1, MID_STATUS_STANDARD_LEN);
-        oled->print(ntsc?F("  NTSC "):(pal?F("  PAL  "):F(" SECAM ")));
+        oled->print(ntsc?F(" NTSC "):(pal?F("  PAL  "):F(" SECAM ")));
         oled->set1X();
     } else {
-        oled->set2X();
+        //oled->set2X();
         oled->clearField(MID_STATUS_INPUT_LEN*fontW, 1, MID_STATUS_STANDARD_LEN);
-        oled->print(F("No Video"));
-        oled->set1X();
+        oled->print(F("  Signal "));
+        oled->print(F("not found"));
+        //oled->set1X();
     }
 
     oled->clearField(0, 5, MID_STATUS_PROFILE_LEN);
@@ -88,12 +89,12 @@ void status_health() {
 
 
 void logo() {
-    #define LOGO_LN1 F(".:::::  .:::::. .:::::.")
-    #define LOGO_LN2 F(":+: :+: :+: :+: :+: :+:")
-    #define LOGO_LN3 F("+:+        +:+  +:+    ")
-    #define LOGO_LN4 F("+#+       +#+   +#+    ")
-    #define LOGO_LN5 F("#+# #+#  #+#    #+# #+#")
-    #define LOGO_LN6 F("`#####' ####### `#####'")
+    #define LOGO_LN1 F(".::::. .:::::. .::::.")
+    #define LOGO_LN2 F(":+  +: :+: :+: :+  +:")
+    #define LOGO_LN3 F("+:        +:+  +:    ")
+    #define LOGO_LN4 F("+#       +#+   +#    ")
+    #define LOGO_LN5 F("#+  +#  #+#    #+  +#")
+    #define LOGO_LN6 F("`####' ####### `####'")
 
     SSD1306AsciiWire *oled = getOled();
     oled->clear();
