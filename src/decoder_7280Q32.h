@@ -7,5 +7,4 @@ class Decoder_7280Q32: public Decoder {
   virtual byte init(int test, bool cvbs=true);
   virtual DecoderStatus get_status();
   virtual Parameter *getParams();
-  //void change_param(int id, uint8_t sign);
 };

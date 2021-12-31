@@ -1,3 +1,7 @@
+#pragma once
+
+#include <Arduino.h>
+
 class DecoderStatus {
   public:
   byte lock;
@@ -33,7 +37,12 @@ class DecoderStatus {
   bool is50hz(){return false;}
 
   bool equals(DecoderStatus target) {
-    for(int i=0;i<4;i++) if(this->raw[i] != target.raw[i]) return false;
+    if (this->lock!=target.lock) return false;
+    if (this->lock) {
+      if (this->interlaced!=target.interlaced) return false;
+      if (this->standard!=target.standard) return false;
+      if (this->hzs!=target.hzs) return false;
+    }
     return true;
   }
 };
