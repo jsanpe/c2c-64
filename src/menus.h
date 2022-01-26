@@ -1,4 +1,5 @@
 #pragma once
+#include <Arduino.h>
 
 class MenuProvider;
 
@@ -74,6 +75,44 @@ template<uint8_t n_levels> class ArrayItem: public MultiValueMenuItem {
   }
 };
 
+class ArrayItemDelegate {
+  public:
+  virtual void callback()=0;
+};
+
+template<uint8_t n_levels> class ArrayItemOO: public MultiValueMenuItem
+{
+  fakestr valueNames[n_levels];
+  uint8_t index=0;
+  MenuProvider *provider;
+  ArrayItemDelegate *delegate;
+
+  public:
+  ArrayItemOO():MultiValueMenuItem(F(""), n_levels, 0){}
+  ArrayItemOO(MenuProvider *provider, fakestr name, 
+    byte value, ArrayItemDelegate* delegate): MultiValueMenuItem(name, n_levels, value)
+  {
+    this->provider=provider;
+    this->delegate=delegate;
+  }
+  bool addValue(fakestr value) {
+    if(index>=n_levels) return false;
+    valueNames[index++] = value;
+    return true;
+  }
+  template<typename... Args> bool addValue(fakestr t, Args... args ) {
+      addValue(t);
+      return addValue(args...);
+  }
+  virtual fakestr getValue(byte index){
+    return valueNames[index];
+  }
+  MenuProvider* changeEvent() {
+      this->delegate->callback();
+      return provider;
+  }
+};
+
 
 typedef ArrayItem<2> BinaryMenuItem;
 typedef ArrayItem<3> TrinaryMenuItem;
@@ -94,6 +133,12 @@ class ArrayMenuItemFactory {
   TrinaryMenuItem createTriplet(fakestr name, fakestr  v1, fakestr v2, fakestr v3, byte value, callback_fn f) {
     TrinaryMenuItem item = TrinaryMenuItem(this->provider, name, value, f);
     item.addValue(v1, v2, v3);
+    return item;
+  }
+  
+  ArrayItem<4> create4Tuple(fakestr name, fakestr  v1, fakestr v2, fakestr v3, fakestr v4, byte value, callback_fn f) {
+    ArrayItem<4> item = ArrayItem<4>(this->provider, name, value, f);
+    item.addValue(v1, v2, v3, v4);
     return item;
   }
 };

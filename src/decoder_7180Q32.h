@@ -1,31 +1,21 @@
+#pragma once 
+
 #include "decoder.h"
 #include "menus.h"
+#include "parameters/YShape.h"
+#include "parameters/CombFilter.h"
+#include "parameters/AdvancedParams.h"
 
 class Decoder_7180Q32: public Decoder {
+  static const byte _i2c_address = 0x40>>1;
   bool cvbs = true;
-  byte lumaSharpness = 0;
-  byte manualLuma = 0;
-  byte chromaSharpness = 0;
-  bool antialias = true;
-  byte driveStrength = 0x15;
   byte autodetectMode = 0;
-  byte squarePixelMode = 0;
-  byte combFilterMode = 1;
-  byte dnrMode = 1;
-  byte ifMode = 0;
-
-  BinaryMenuItem aaliasItem;
-  TrinaryMenuItem drstrDataItem;
-  TrinaryMenuItem drstrClockItem;
-  TrinaryMenuItem autoYShapeItem;
-  ArrayItem<29> manYshapeItem;
-  ArrayItem<8> chromaSharpnessItem;
+  
+  YShapeParameter yShapeParam = YShapeParameter(_i2c_address);
+  CombFilterParameter combFilterParam = CombFilterParameter(_i2c_address);
+  AdvancedParameters advancedParam = AdvancedParameters(_i2c_address);  
   ArrayItem<4> autodetectItem;
-  BinaryMenuItem squarePixelItem;
-  ArrayItem<4> combFilterItem;
-  BinaryMenuItem dnrModeItem;
-  ArrayItem<4> ifFilterItem;
-
+  
   public:
   virtual byte i2c_address();
   virtual byte reset();
@@ -34,21 +24,8 @@ class Decoder_7180Q32: public Decoder {
   virtual byte setSource(bool cvbs);
   virtual bool getSource(){return this->cvbs;}
   
-  void setIfFilterMode(byte value);
-  void setDnrMode(byte value);
-  void setCombFilterMode(byte value);
   void setAutodetectMode(byte value);
-  void setSquarePixelMode(byte square);
-  byte setLumaSharpness(byte sharp);
-  byte getLumaSharpness(){return this->lumaSharpness;}
-  byte setManualLuma(byte manualLuma){this->manualLuma=manualLuma;}
-  byte getManualLuma(){return this->manualLuma;}
-  byte setChromaSharpness(byte sharp);
-  byte getChromaSharpness(){return this->chromaSharpness;}
-  virtual bool getAntialias(){return this->antialias;}
-  virtual byte setAntialias(bool antialias);
-  byte setDriveStrength(byte value);
-  byte getDriveStrength();
+
   virtual MenuProvider *action();
 
   virtual void initMenu(MenuProvider *root);

@@ -9,20 +9,6 @@
 #endif
 
 /*******  MENU ITEMS *****/
-
-/*class BrightnessItem: public BoardMenuItem {
-  C2CBoard *board;
-  public:
-  BrightnessItem(C2CBoard *board): BoardMenuItem(F("Brightness"), (byte)255){this->board=board;};
-  virtual const __FlashStringHelper* getValue(byte index){
-    return F("");
-  }
-  virtual MenuProvider* changeEvent() {
-    return board;
-    //board->setBrightness(this->getRawValue());
-  }
-};*/
-
 void outputTypeCallback(MenuProvider *board, byte value) {
   ((C2CBoard*)board)->getEncoder()->setOutputColorSpace(value==0);
 }
