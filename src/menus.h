@@ -43,7 +43,7 @@ class MultiValueMenuItem: public MenuValueItem {
   virtual MenuProvider* action();
 };
 
-
+/*
 template<uint8_t n_levels> class ArrayItem: public MultiValueMenuItem {
   fakestr valueNames[n_levels];
   uint8_t index=0;
@@ -73,7 +73,7 @@ template<uint8_t n_levels> class ArrayItem: public MultiValueMenuItem {
       f(provider, this->getRawValue());
       return provider;
   }
-};
+};*/
 
 class ArrayItemDelegate {
   public:
@@ -114,44 +114,14 @@ template<uint8_t n_levels> class ArrayItemOO: public MultiValueMenuItem
 };
 
 
-typedef ArrayItem<2> BinaryMenuItem;
-typedef ArrayItem<3> TrinaryMenuItem;
-
-class ArrayMenuItemFactory {
-  MenuProvider *provider;
-  public:
-  ArrayMenuItemFactory(MenuProvider *provider){
-    this->provider = provider;
-  }
-
-  BinaryMenuItem createDuplet(fakestr name, fakestr  v1, fakestr v2, byte value, callback_fn f) {
-    BinaryMenuItem item = BinaryMenuItem(this->provider, name, value, f);
-    item.addValue(v1, v2);
-    return item;
-  }
-
-  TrinaryMenuItem createTriplet(fakestr name, fakestr  v1, fakestr v2, fakestr v3, byte value, callback_fn f) {
-    TrinaryMenuItem item = TrinaryMenuItem(this->provider, name, value, f);
-    item.addValue(v1, v2, v3);
-    return item;
-  }
-  
-  ArrayItem<4> create4Tuple(fakestr name, fakestr  v1, fakestr v2, fakestr v3, fakestr v4, byte value, callback_fn f) {
-    ArrayItem<4> item = ArrayItem<4>(this->provider, name, value, f);
-    item.addValue(v1, v2, v3, v4);
-    return item;
-  }
-};
-
-
-
-
 
 class BackMenuItem: public MenuItem {
     public:
+    BackMenuItem(){}
     BackMenuItem(MenuProvider *root){
         MenuItem::setRoot(root);
     }
+    void _setRoot(MenuProvider *root){MenuItem::setRoot(root);}
     virtual void setRoot(MenuProvider *root){}
     fakestr getName(){return F(">Back<");}
 };
@@ -161,6 +131,7 @@ class MenuProvider: public MenuItem {
     MenuItem *tail = NULL;
     MenuItem *selected = NULL;
     fakestr name;
+    BackMenuItem back;
 
     public:
     MenuProvider(const __FlashStringHelper *name) {
@@ -186,6 +157,7 @@ class MenuProvider: public MenuItem {
     MenuItem *browseDown() {if(selected->_next)selected=selected->_next; return selected;}
     virtual MenuItem *getVisibleItem(){return selected;}
     virtual void setRoot(MenuProvider *root) {
-        this->addItem(new BackMenuItem(root));
+        back._setRoot(root);
+        this->addItem(&back);
     }
 };

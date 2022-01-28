@@ -9,6 +9,12 @@ byte Decoder_7180Q32::i2c_address() {
   return  _i2c_address;
 }
 
+Decoder_7180Q32::Decoder_7180Q32():
+  autodetectItem(this, F("Format"), DefaultAutoDetectMode, this)
+{
+  autodetectItem.addValue(F("PAL/NTSC_J"), F("PAL/NTSC_M"), F("PAL_N/NTSC_J"), F("PAL_N/NTSC_M"));
+}
+
 byte Decoder_7180Q32::reset() {
   byte ret = 0;
   send_i2c(DECODER_ADDR, 0x0F, 0x80); //Software reset
@@ -92,30 +98,25 @@ DecoderStatus Decoder_7180Q32::get_status() {
   return status;
 }
 
-void autodetectModeCallback(MenuProvider *dec, byte value) {
-  ((Decoder_7180Q32*)dec)->setAutodetectMode(value);
-}
-
 void Decoder_7180Q32::initMenu(MenuProvider *root) {
-  ArrayMenuItemFactory itemFactory = ArrayMenuItemFactory(this);
+
 
   yShapeParam.initMenu(this);
   yShapeParam.callback();
   combFilterParam.initMenu(this);
   combFilterParam.callback();
+  this->addItem(&autodetectItem);
   advancedParam.initMenu(this);
   advancedParam.callback();
-
-  byte value = autodetectMode;
-  autodetectItem = ArrayItem<4>(this, F("Format"), value, autodetectModeCallback);
-  autodetectItem.addValue(F("PAL/NTSC_J"), F("PAL/NTSC_M"), F("PAL_N/NTSC_J"), F("PAL_N/NTSC_M"));
-  this->addItem(&autodetectItem);
 }
 
+void Decoder_7180Q32::callback() {
+  setAutodetectMode(autodetectItem.getRawValue());
+}
 void Decoder_7180Q32::setAutodetectMode(byte value){
   this->autodetectMode = value;
   byte source = this->cvbs?0:0x6;
-  return send_i2c(DECODER_ADDR, 0x00, (value<<4)|source);
+  send_i2c(DECODER_ADDR, 0x00, (value<<4)|source);
 }
 
 MenuProvider *Decoder_7180Q32::action() {

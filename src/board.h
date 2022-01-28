@@ -21,7 +21,9 @@ class BoardStatus {
   bool hz60;
 };
 
-class C2CBoard: public MenuProvider {
+//#define TEST_PATTERN_MENU_ITEM
+
+class C2CBoard: public MenuProvider, ArrayItemDelegate {
   bool decoderFreeRun = false;
   bool encoderFreeRun = false;
   input_t input = CVBS;
@@ -33,8 +35,10 @@ class C2CBoard: public MenuProvider {
 
   uint16_t initAdv();
 
-  BinaryMenuItem outputColorSpaceItem;
+  ArrayItemOO<2> outputColorSpaceItem;
+  #ifdef TEST_PATTERN_MENU_ITEM
   BinaryMenuItem encoderFreeRunItem;
+  #endif
 
   public:
   C2CBoard();
@@ -52,7 +56,7 @@ class C2CBoard: public MenuProvider {
   BoardStatus getCurrentStatus();
   void toggleInput();
 
-  //board configuration functions
+  virtual void callback();
   
   //Uninteresting functions
   void disableFreeRun();

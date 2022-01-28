@@ -3,168 +3,229 @@
 #include "menus.h"
 #include "i2c.h"
 
+//#define DRIVE_STRENGTH_PARAM
+#define ANTIALIAS_PARAM
+#define IF_FILTER_PARAM
+#define DNR_PARAM
+#define SQUARE_PARAM
+
 class AdvancedParameters: MenuProvider
 {
-  byte i2c_address;
-
-  //Antialias
-  static const byte AntialiasRegister=0xF3;
-  ArrayItemOO<2> antialiasItem;
-  byte antialiasValue = 1;
-  
-  //Drive Strength
-  static const byte DriveStrengthRegister=0xF4;
-  ArrayItemOO<3> drstrSyncItem;
-  byte drstrSyncValue = 1;
-  ArrayItemOO<3> drstrDataItem;
-  byte drstrDataValue = 1;
-  ArrayItemOO<3> drstrClockItem;
-  byte drstrClockValue = 1;
-
-  //IF Filter
-  static const byte IfFilterRegister=0xF8;
-  ArrayItemOO<4> ifFilterItem;
-  byte ifFilterValue = 0;
-
-  //DNR
-  static const byte DNRRegister=0x4D;
-  ArrayItemOO<2> dnrItem;
-  byte dnrValue = 1;
-
-  //Square Pixel
-  static const byte SquarePixelRegister=0x01;
-  ArrayItemOO<2> squarePixelItem;
-  byte squarePixelValue = 0;
+  byte i2c_address;  
 
   class DriveStrengthHandler: public ArrayItemDelegate {
-    AdvancedParameters *parent;
+    byte i2c_address;
+    //Drive Strength
+    static const byte DriveStrengthRegister=0xF4;
+    #ifdef DRIVE_STRENGTH_PARAM
+    ArrayItemOO<3> drstrSyncItem;
+    ArrayItemOO<3> drstrDataItem;
+    ArrayItemOO<3> drstrClockItem;
+    #endif
+    byte drstrSyncValue = 1;
+    byte drstrDataValue = 1;
+    byte drstrClockValue = 1;
+
     public:
-    DriveStrengthHandler(AdvancedParameters *parent){this->parent=parent;}
+    DriveStrengthHandler(byte i2c_address){this->i2c_address=i2c_address;}
     byte getRegisterValue() {
-        return ((parent->drstrDataValue+1) << 4) | 
-                ((parent->drstrClockValue+1) << 2) | 
-                (parent->drstrSyncValue+1);
+        return ((this->drstrDataValue+1) << 4) | 
+                ((this->drstrClockValue+1) << 2) | 
+                (this->drstrSyncValue+1);
     }
 
-    void callback() {
-        parent->drstrSyncValue = parent->drstrSyncItem.getRawValue();
-        parent->drstrDataValue = parent->drstrDataItem.getRawValue();
-        parent->drstrClockValue = parent->drstrClockItem.getRawValue();
-
-        send_i2c(parent->i2c_address, DriveStrengthRegister, getRegisterValue());
+    virtual void callback() {
+        #ifdef DRIVE_STRENGTH_PARAM
+        this->drstrSyncValue = this->drstrSyncItem.getRawValue();
+        this->drstrDataValue = this->drstrDataItem.getRawValue();
+        this->drstrClockValue = this->drstrClockItem.getRawValue();
+        #endif
+        send_i2c(i2c_address, DriveStrengthRegister, getRegisterValue());
     }
+    
+    void initMenu(MenuProvider *provider) {
+        #ifdef DRIVE_STRENGTH_PARAM
+        drstrSyncItem = ArrayItemOO<3>(provider, F("Sync Power"), drstrSyncValue, this);
+        drstrSyncItem.addValue(F("Low"), F("Med"), F("High"));
+        provider->addItem(&drstrSyncItem);
+
+        drstrDataItem = ArrayItemOO<3>(provider, F("Data Power"), drstrDataValue, this);
+        drstrDataItem.addValue(F("Low"), F("Med"), F("High"));
+        provider->addItem(&drstrDataItem);
+
+        drstrClockItem = ArrayItemOO<3>(provider, F("Clock Power"), drstrClockValue, this);
+        drstrClockItem.addValue(F("Low"), F("Med"), F("High"));
+        provider->addItem(&drstrClockItem);
+        #endif
+    }
+
   };
+  DriveStrengthHandler drstrHandler;
 
+
+  
   class AntialiasHandler: public ArrayItemDelegate {
-    AdvancedParameters *parent;
+    byte i2c_address;
+    //Antialias
+    static const byte AntialiasRegister=0xF3;
+    byte antialiasValue = 1;
+    #ifdef ANTIALIAS_PARAM
+    ArrayItemOO<2> antialiasItem;
+    #endif
+
     public:
-    AntialiasHandler(AdvancedParameters *parent){this->parent=parent;}
+    AntialiasHandler(byte i2c_address){this->i2c_address=i2c_address;}
     byte getRegisterValue() {
-        return parent->antialiasValue==1?0xF:0x8;
+        return antialiasValue==1?0xF:0x8;
     }
 
-    void callback() {
-        parent->antialiasValue = parent->antialiasItem.getRawValue();
-        send_i2c(parent->i2c_address, AntialiasRegister, getRegisterValue());
+    virtual void callback() {
+        #ifdef ANTIALIAS_PARAM
+        antialiasValue = antialiasItem.getRawValue();
+        #endif
+        send_i2c(i2c_address, AntialiasRegister, getRegisterValue());
+    }
+
+    void initMenu(MenuProvider *provider) {
+        #ifdef ANTIALIAS_PARAM
+        antialiasItem = ArrayItemOO<2>(provider, F("Antialias"), antialiasValue, this);
+        antialiasItem.addValue(F("Off"), F("On"));
+        provider->addItem(&antialiasItem);
+        #endif
     }
   };
+  AntialiasHandler antialiasHandler;
+
 
   class IfFilterHandler: public ArrayItemDelegate {
-    AdvancedParameters *parent;
+    byte i2c_address;
+    //IF Filter
+    static const byte IfFilterRegister=0xF8;
+    #ifdef IF_FILTER_PARAM
+    ArrayItemOO<4> ifFilterItem;
+    #endif
+    byte ifFilterValue = 0;
+
     public:
-    IfFilterHandler(AdvancedParameters *parent){this->parent=parent;}
+    IfFilterHandler(byte i2c_address){this->i2c_address=i2c_address;}
     byte getRegisterValue() {
-        return (parent->ifFilterValue==0?0x00:0x04)|parent->ifFilterValue;
+        return (ifFilterValue==0?0x00:0x04)|ifFilterValue;
     }
 
-    void callback() {
-        parent->ifFilterValue = parent->ifFilterItem.getRawValue();
-        send_i2c(parent->i2c_address, IfFilterRegister, getRegisterValue());
+    virtual void callback() {
+        #ifdef IF_FILTER_PARAM
+        ifFilterValue = ifFilterItem.getRawValue();
+        #endif
+        send_i2c(i2c_address, IfFilterRegister, getRegisterValue());
+    }
+
+    void initMenu(MenuProvider *provider) {
+        #ifdef IF_FILTER_PARAM
+        ifFilterItem = ArrayItemOO<4>(provider, F("IF Fitler"), ifFilterValue, this);
+        ifFilterItem.addValue(F("Off"), F("Low"), F("Med"), F("High"));
+        provider->addItem(&ifFilterItem);
+        #endif
     }
   };
+  IfFilterHandler ifFilterHandler;
 
   class DNRHandler: public ArrayItemDelegate {
-    AdvancedParameters *parent;
+    byte i2c_address;
+    //DNR
+    static const byte DNRRegister=0x4D;
+    #ifdef DNR_PARAM
+    ArrayItemOO<2> dnrItem;
+    #endif
+    byte dnrValue = 1;
+
     public:
-    DNRHandler(AdvancedParameters *parent){this->parent=parent;}
+    DNRHandler(byte i2c_address){this->i2c_address=i2c_address;}
     byte getRegisterValue() {
-        return 0xEF & (parent->dnrValue<<5);;
+        return 0xEF & (dnrValue<<5);
     }
 
-    void callback() {
-        parent->dnrValue = parent->dnrItem.getRawValue();
-        send_i2c(parent->i2c_address, DNRRegister, getRegisterValue());
+    virtual void callback() {
+        #ifdef DNR_PARAM
+        dnrValue = dnrItem.getRawValue();
+        #endif
+        send_i2c(i2c_address, DNRRegister, getRegisterValue());
+    }
+
+    void initMenu(MenuProvider *provider) {
+        #ifdef DNR_PARAM
+        dnrItem = ArrayItemOO<2>(provider, F("DNR"), dnrValue, this);
+        dnrItem.addValue(F("Off"), F("On"));
+        provider->addItem(&dnrItem);
+        #endif
     }
   };
+  DNRHandler dnrHandler;
 
   class SquarePixelHandler: public ArrayItemDelegate {
-    AdvancedParameters *parent;
+    byte i2c_address;
+    //Square Pixel
+    static const byte SquarePixelRegister=0x01;
+    #ifdef SQUARE_PARAM
+    ArrayItemOO<2> squarePixelItem;
+    #endif
+    byte squarePixelValue = 0;
+
     public:
-    SquarePixelHandler(AdvancedParameters *parent){this->parent=parent;}
+    SquarePixelHandler(byte i2c_address){this->i2c_address=i2c_address;}
     byte getRegisterValue() {
-        byte val = 0xC8 | (parent->squarePixelValue << 2);
+        byte val = 0xC8 | (squarePixelValue << 2);
         return val;
     }
 
-    void callback() {
-        parent->squarePixelValue = parent->squarePixelItem.getRawValue();
-        send_i2c(parent->i2c_address, SquarePixelRegister, getRegisterValue());
+    virtual void callback() {
+        #ifdef SQUARE_PARAM
+        squarePixelValue = squarePixelItem.getRawValue();
+        #endif
+        send_i2c(i2c_address, SquarePixelRegister, getRegisterValue());
+    }
+
+    void initMenu(MenuProvider *provider) {
+        #ifdef SQUARE_PARAM
+        squarePixelItem = ArrayItemOO<2>(provider, F("Square Pixel"), squarePixelValue, this);
+        squarePixelItem.addValue(F("Off"), F("On"));
+        provider->addItem(&squarePixelItem);
+        #endif
     }
   };
-
-  DriveStrengthHandler *drstrHandler;
-  AntialiasHandler *antialiasHandler;
-  IfFilterHandler *ifFilterHandler;
-  DNRHandler *dnrHandler;
-  SquarePixelHandler *squarePixelHandler;
+    
+  SquarePixelHandler squarePixelHandler;
 
   public:
-  AdvancedParameters(byte i2c_address):MenuProvider(F("Advanced")){
+  AdvancedParameters(byte i2c_address):MenuProvider(F(">Advanced")),
+    drstrHandler(i2c_address),
+    antialiasHandler(i2c_address),
+    ifFilterHandler(i2c_address),
+    dnrHandler(i2c_address),
+    squarePixelHandler(i2c_address)
+  {
     this->i2c_address=i2c_address;
-    this->drstrHandler = new DriveStrengthHandler(this);
-    this->antialiasHandler = new AntialiasHandler(this);
-    this->ifFilterHandler = new IfFilterHandler(this);
-    this->dnrHandler = new DNRHandler(this);
-    this->squarePixelHandler = new SquarePixelHandler(this);
   }
 
   void callback() {
-      drstrHandler->callback();
-      antialiasHandler->callback();
-      ifFilterHandler->callback();
-      dnrHandler->callback();
-      squarePixelHandler->callback();
+      drstrHandler.callback();
+      antialiasHandler.callback();
+      ifFilterHandler.callback();
+      dnrHandler.callback();
+      squarePixelHandler.callback();
   }
 
-  void initMenu(MenuProvider *provider) {
-    antialiasItem = ArrayItemOO<2>(this, F("Antialias"), antialiasValue, antialiasHandler);
-    antialiasItem.addValue(F("Off"), F("On"));
-    this->addItem(&antialiasItem);
-
-    ifFilterItem = ArrayItemOO<4>(this, F("IF Fitler"), ifFilterValue, ifFilterHandler);
-    ifFilterItem.addValue(F("Off"), F("Low"), F("Med"), F("High"));
-    this->addItem(&ifFilterItem);
-
-    dnrItem = ArrayItemOO<2>(this, F("DNR"), dnrValue, dnrHandler);
-    dnrItem.addValue(F("Off"), F("On"));
-    this->addItem(&dnrItem);
-
-    drstrSyncItem = ArrayItemOO<3>(this, F("Data Power"), drstrSyncValue, drstrHandler);
-    drstrSyncItem.addValue(F("Low"), F("Med"), F("High"));
-    this->addItem(&drstrSyncItem);
-
-    drstrDataItem = ArrayItemOO<3>(this, F("Data Power"), drstrDataValue, drstrHandler);
-    drstrDataItem.addValue(F("Low"), F("Med"), F("High"));
-    this->addItem(&drstrDataItem);
-
-    drstrClockItem = ArrayItemOO<3>(this, F("Clock Power"), drstrClockValue, drstrHandler);
-    drstrClockItem.addValue(F("Low"), F("Med"), F("High"));
-    this->addItem(&drstrClockItem);
-
-    squarePixelItem = ArrayItemOO<2>(this, F("Square Pixel"), squarePixelValue, squarePixelHandler);
-    squarePixelItem.addValue(F("Off"), F("On"));
-    this->addItem(&squarePixelItem);
-
+  virtual void initMenu(MenuProvider *provider) {
+    drstrHandler.initMenu(this);
+    antialiasHandler.initMenu(this);
+    ifFilterHandler.initMenu(this);
+    dnrHandler.initMenu(this);
+    squarePixelHandler.initMenu(this);
+    Serial.println("O1");
     provider->addItem(this);
+    Serial.println("O2");
+  }
+
+  virtual MenuProvider *action() {
+      return this;
   }
 };
