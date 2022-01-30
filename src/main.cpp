@@ -47,13 +47,10 @@ void setup() {
   init_pins(); //setup GPIO
   init_output(); //Init UART and I2C
   ui.initUI();
-  Serial.println("M0");
   ui.logo(); //Show splashcreen on available interfaces
   hello_signal(); //blink leds with known pattern
-  Serial.println("M1");
   err_init_adv = board.initVideoPipeline(); //Reset Video decoder and encoder
   digitalWrite(LED_INPUT, 1);
-  Serial.println("M2");
   delay(1000);
   if(err_init_adv==0) {
     digitalWrite(LED_SIGNAL,1); //Signal correct bootup sequence with a short blink
@@ -62,14 +59,10 @@ void setup() {
     //Set default input configuration (TODO: Read from EEPROM)
     board.setSource(DEFAULT_SOURCE);
     board.setEncoderFreeRun(DEFAULT_FREERUN);
-    Serial.println("M3");
     board.initMenu();
-    Serial.println("M4");
     delay(100);
     initscr();
-    Serial.println("M5");
     ui.clearUI();
-    Serial.println("M6");
   } else {
     ui.info("Error init:", (err_init_adv&0xff00)>>8, err_init_adv&0xff);
   }
@@ -84,7 +77,6 @@ void loop() {
   static bool refreshFlag = true;
   //Step 1: Update UI if needed
   if(err_init_adv!=0){delay(1000);return;}
-  //Serial.println("L1");
   bool changed = refreshFlag || board.checkStatusChange();
   if(changed) {
     refreshFlag = false;

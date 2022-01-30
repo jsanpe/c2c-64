@@ -99,8 +99,6 @@ DecoderStatus Decoder_7180Q32::get_status() {
 }
 
 void Decoder_7180Q32::initMenu(MenuProvider *root) {
-
-
   yShapeParam.initMenu(this);
   yShapeParam.callback();
   combFilterParam.initMenu(this);

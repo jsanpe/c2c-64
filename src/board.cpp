@@ -93,7 +93,6 @@ bool C2CBoard::checkStatusChange() {
     decoderStatus = status;
     digitalWrite(LED_LOCK, status.lock?1:0); //Update lock led status
     //init encoder to account for decoder change
-    //Serial.print("Encoder FR"); Serial.println(this->encoderFreeRun);
     if(decoderStatus.lock) {
       byte ret = getEncoder()->setInterlaced(decoderStatus.interlaced);
       ret += getEncoder()->setPal(decoderStatus.isPAL());

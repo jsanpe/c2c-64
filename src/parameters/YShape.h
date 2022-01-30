@@ -13,8 +13,8 @@ class YShapeParameter: ArrayItemDelegate
   ArrayItemOO<8> chromaSharpnessItem;
 
   byte yShapeFilterMode = 2; //0:Auto_1, 1:Auto_2, 2:PAL, 3:NTSC, 4:SVHS
-  byte yShapePalMode = 2; 
-  byte yShapeNtscMode = 2;
+  byte yShapePalMode = 4; 
+  byte yShapeNtscMode = 4;
   byte yShapeSVHSMode = 17;
   byte chromaShapeMode = 0;
 

@@ -6,8 +6,8 @@
 //#define DRIVE_STRENGTH_PARAM
 #define ANTIALIAS_PARAM
 #define IF_FILTER_PARAM
-#define DNR_PARAM
-#define SQUARE_PARAM
+//#define DNR_PARAM
+//#define SQUARE_PARAM
 
 class AdvancedParameters: MenuProvider
 {
@@ -220,9 +220,7 @@ class AdvancedParameters: MenuProvider
     ifFilterHandler.initMenu(this);
     dnrHandler.initMenu(this);
     squarePixelHandler.initMenu(this);
-    Serial.println("O1");
     provider->addItem(this);
-    Serial.println("O2");
   }
 
   virtual MenuProvider *action() {
