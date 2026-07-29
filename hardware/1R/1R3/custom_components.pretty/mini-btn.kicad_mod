@@ -1,0 +1,152 @@
+(footprint "mini-btn"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(property "Reference" "SW2"
+		(at 1.525 -0.5 270)
+		(layer "F.SilkS")
+		(uuid "dbdc706a-3618-454a-898a-9c800721f299")
+		(effects
+			(font
+				(size 0.7 0.7)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "SW_Push"
+		(at 0.9 -2.6 180)
+		(layer "F.Fab")
+		(uuid "a1d8e558-0d9c-4694-ab73-44c62f6e670a")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "d982afef-1b45-4a74-95bc-63aafcbf5b44")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "8ce16aa1-5cc4-43ce-8ce4-6dd9e371be34")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "LCSC" "C455261"
+		(at 23.825 226.325 90)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "ffd3c442-5f6c-4be2-b9b6-2f7f0c823c48")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(sheetname "Control")
+	(sheetfile "MPU.kicad_sch")
+	(attr through_hole)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -0.8 -0.8)
+		(end -0.8 0)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "08042e3a-ca03-4cd8-8afe-e02968cf0f47")
+	)
+	(fp_line
+		(start -0.8 0)
+		(end -0.8 2.7)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "ba6e68e5-7bf6-4857-b25f-86c6d3a2e180")
+	)
+	(fp_line
+		(start -0.8 2.7)
+		(end 3.9 2.7)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "71d6a166-1832-49d1-a7f8-17a343a8f6f2")
+	)
+	(fp_line
+		(start 3.9 -0.8)
+		(end -0.8 -0.8)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "add0c9ec-9b55-4c93-9c4f-0208e3c49a20")
+	)
+	(fp_line
+		(start 3.9 2.7)
+		(end 3.9 -0.8)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "0e2c68ed-98e6-45bd-8ed2-9dbb848832aa")
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 1.524 1.524)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "8030f6f1-8a16-474f-9a10-6c619a65f555")
+	)
+	(pad "2" thru_hole circle
+		(at 3.1 0)
+		(size 1.524 1.524)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "acab1b59-ee81-4eaf-b7d7-637ed2ea9434")
+	)
+	(pad "3" thru_hole circle
+		(at 1.55 1.95)
+		(size 1.524 1.524)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "5c731823-fa44-4106-a1f4-5bcbffeba439")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/RCJ-041/Button.step"
+		(offset
+			(xyz 1.25 1 2.4)
+		)
+		(scale
+			(xyz 0.1 0.1 0.1)
+		)
+		(rotate
+			(xyz 0 0 90)
+		)
+	)
+)

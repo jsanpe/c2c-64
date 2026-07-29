@@ -1,0 +1,6 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "custom_components") (type "Legacy") (uri "${KIPRJMOD}/symbols/custom_components.lib") (options "") (descr ""))
+	(lib (name "composite2rgb-rescue") (type "Legacy") (uri "${KIPRJMOD}/symbols/composite2rgb-rescue.lib") (options "") (descr ""))
+	(lib (name "atmega") (type "Legacy") (uri "${KIPRJMOD}/symbols/ATMEGA328PB-MU.lib") (options "") (descr ""))
+)
